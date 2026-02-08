@@ -3,187 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cobranzas Pro - Dashboard</title>
+    <title>CoMx - Plataforma Financiera</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        .hidden { display: none; }
-        .dot-action { width: 6px; height: 6px; background: #cbd5e1; border-radius: 50%; display: inline-block; cursor: pointer; margin-left: 5px; }
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .bg-image {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        /* Animaciones suaves */
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen">
+<body class="bg-image min-h-screen text-slate-800">
 
-<div id="loginScreen" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-[2000]">
-    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm">
-        <h2 class="text-2xl font-bold text-center text-slate-800 mb-6">ACCESO INTERNO</h2>
-        <input type="text" id="user" placeholder="Usuario" class="w-full p-3 border rounded-lg mb-4 outline-none focus:ring-2 focus:ring-blue-500">
-        <input type="password" id="pass" placeholder="Contraseña" class="w-full p-3 border rounded-lg mb-6 outline-none focus:ring-2 focus:ring-blue-500">
-        <button onclick="login()" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700 transition">INGRESAR</button>
-    </div>
-</div>
-
-<nav id="mainNav" class="bg-blue-800 text-white shadow-lg hidden">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-        <div class="flex space-x-4">
-            <button onclick="switchView('tickets')" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition">Generar Ticket</button>
-            <button onclick="switchView('recibos')" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition">Tabla Recibos</button>
-            <button id="navAdmin" onclick="switchView('admin')" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition">Admin Usuarios</button>
-        </div>
-        <div class="flex items-center gap-4">
-            <span id="userNameDisplay" class="text-blue-200 text-xs"></span>
-            <button onclick="location.reload()" class="text-xs bg-red-500 px-2 py-1 rounded">Salir</button>
-        </div>
-    </div>
-</nav>
-
-<div id="appContent" class="max-w-7xl mx-auto p-6 hidden">
-    
-    <div id="viewTickets" class="space-y-6">
-        <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
-            <h2 class="text-xl font-bold text-slate-800 mb-4">Generar Link de Cobro</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <select id="selEmpresa" onchange="updCuenta()" class="p-3 border rounded-lg bg-slate-50">
-                    <option value="">Seleccione Producto...</option>
-                    <option value="Tala Préstamos" data-logo="🏦" data-cta="5255-2003-4174-22">Tala Préstamos</option>
-                    <option value="Kueski Pay" data-logo="💰" data-cta="0123-4567-8901-99">Kueski Pay</option>
-                    <option value="Baubap" data-logo="📱" data-cta="9876-5432-1098-11">Baubap</option>
-                </select>
-                <input type="text" id="tCliente" placeholder="Nombre del Cliente" class="p-3 border rounded-lg">
-                <input type="number" id="tMonto" placeholder="Monto MXN" class="p-3 border rounded-lg">
-                <input type="text" id="tMotivo" placeholder="Motivo (Ej. Liquidación)" class="p-3 border rounded-lg">
-                <input type="text" id="tCtaManual" placeholder="Confirmar Cuenta" class="p-3 border rounded-lg bg-blue-50">
-                <button onclick="generarLink()" class="bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">GENERAR LINK</button>
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 p-4">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-sm text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+            <div class="mb-6">
+                <i class="fa-solid fa-layer-group text-4xl text-blue-600"></i>
             </div>
-        </div>
-        <div id="resLink" class="hidden bg-green-50 border-l-4 border-green-500 p-4 rounded-r-xl">
-            <p class="text-green-800 font-bold mb-1 text-sm">Link listo para enviar:</p>
-            <div class="flex gap-2">
-                <input type="text" id="urlFinal" readonly class="w-full p-2 bg-white border rounded text-xs text-blue-600 font-mono">
-                <button onclick="copyLink()" class="bg-slate-800 text-white px-4 rounded text-xs">Copiar</button>
+            <h2 class="text-2xl font-bold text-slate-800 mb-1">Bienvenido a CoMx</h2>
+            <p class="text-sm text-slate-500 mb-6">Acceso exclusivo para personal autorizado</p>
+            
+            <div class="space-y-4">
+                <div class="relative">
+                    <i class="fa-solid fa-user absolute left-3 top-3.5 text-slate-400"></i>
+                    <input type="text" id="user" placeholder="Usuario" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                </div>
+                <div class="relative">
+                    <i class="fa-solid fa-lock absolute left-3 top-3.5 text-slate-400"></i>
+                    <input type="password" id="pass" placeholder="Contraseña" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                </div>
+                <button id="btnLogin" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-500/30 transition transform active:scale-95">
+                    INICIAR SESIÓN
+                </button>
             </div>
         </div>
     </div>
 
-    <div id="viewRecibos" class="hidden space-y-4">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-bold text-slate-800">Control de Recibos de Reembolso</h2>
-            <button onclick="document.getElementById('formRecibo').classList.toggle('hidden')" class="bg-slate-800 text-white px-3 py-1 rounded text-sm">👁️</button>
-        </div>
-        <div id="formRecibo" class="hidden bg-white p-4 rounded-lg shadow border grid grid-cols-4 gap-2">
-            <input type="text" id="rApp" placeholder="Aplicación" class="p-2 border rounded text-sm">
-            <input type="number" id="rMonto" placeholder="Monto" class="p-2 border rounded text-sm">
-            <input type="text" id="rEstado" placeholder="Estado (Intereses)" class="p-2 border rounded text-sm">
-            <input type="text" id="rCliente" placeholder="Cliente" class="p-2 border rounded text-sm">
-            <input type="text" id="rInfo" value="CARGADA" class="p-2 border rounded text-sm">
-            <input type="text" id="rTel" placeholder="Teléfono" class="p-2 border rounded text-sm">
-            <button onclick="guardarRecibo()" class="bg-blue-600 text-white rounded font-bold">Guardar</button>
-        </div>
-        <div class="bg-white rounded-xl shadow-md overflow-x-auto">
-            <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50 border-b">
-                    <tr>
-                        <th class="p-4">Aplicación</th>
-                        <th class="p-4">Importe</th>
-                        <th class="p-4">Estado Reembolso</th>
-                        <th class="p-4">Nombre Cliente</th>
-                        <th class="p-4">Info Personal</th>
-                        <th class="p-4">Estado Pedido</th>
-                        <th class="p-4">Teléfono</th>
-                    </tr>
-                </thead>
-                <tbody id="bodyRecibos"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="viewAdmin" class="hidden">
-        <div class="bg-white p-6 rounded-xl shadow-md max-w-md mx-auto">
-            <h2 class="text-xl font-bold mb-4">Registrar Nuevo Empleado</h2>
-            <input type="text" id="nNombre" placeholder="Nombre Completo" class="w-full p-2 border rounded mb-3">
-            <input type="text" id="nUser" placeholder="Usuario" class="w-full p-2 border rounded mb-3">
-            <input type="password" id="nPass" placeholder="Contraseña" class="w-full p-2 border rounded mb-4">
-            <button onclick="addUser()" class="w-full bg-slate-800 text-white p-2 rounded font-bold">CREAR ACCESO</button>
-        </div>
-    </div>
-
-</div>
-
-<script>
-    let db_u = JSON.parse(localStorage.getItem('db_u')) || [{n: "Jefe", u: "admin", p: "1234", r: "admin"}];
-    let db_r = JSON.parse(localStorage.getItem('db_r')) || [];
-    let edId = -1;
-
-    function login() {
-        const u = document.getElementById('user').value, p = document.getElementById('pass').value;
-        const f = db_u.find(x => x.u === u && x.p === p);
-        if(f) {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('mainNav').classList.remove('hidden');
-            document.getElementById('appContent').classList.remove('hidden');
-            document.getElementById('userNameDisplay').innerText = `Agente: ${f.n}`;
-            if(f.r !== 'admin') document.getElementById('navAdmin').classList.add('hidden');
-            renderRecibos();
-        } else alert("Error de acceso");
-    }
-
-    function switchView(v) {
-        document.querySelectorAll('.view, #viewTickets, #viewRecibos, #viewAdmin').forEach(x => x.classList.add('hidden'));
-        document.getElementById('view' + v.charAt(0).toUpperCase() + v.slice(1)).classList.remove('hidden');
-    }
-
-    function updCuenta() {
-        const s = document.getElementById('selEmpresa');
-        document.getElementById('tCtaManual').value = s.options[s.selectedIndex].dataset.cta || "";
-    }
-
-    function generarLink() {
-        const e = document.getElementById('selEmpresa').value, c = document.getElementById('tCliente').value, 
-              m = document.getElementById('tMonto').value, cta = document.getElementById('tCtaManual').value;
-        if(!e || !c || !m) return alert("Faltan datos");
+    <div id="mainApp" class="hidden min-h-screen flex flex-col">
         
-        // REEMPLAZA 'pago.html' con la URL real cuando lo subas a internet
-        const url = `${window.location.origin}/pago.html?e=${btoa(e)}&c=${btoa(c)}&m=${m}&cta=${btoa(cta)}`;
-        document.getElementById('resLink').classList.remove('hidden');
-        document.getElementById('urlFinal').value = url;
-    }
+        <nav class="glass sticky top-0 z-40 border-b border-white/20 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-blue-600 text-xl"></i>
+                        <span class="font-bold text-xl tracking-tight text-slate-800">CoMx</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="hidden md:flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-full">
+                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span class="text-xs font-semibold text-blue-800">Sistema Online</span>
+                        </div>
+                        <button onclick="location.reload()" class="text-slate-500 hover:text-red-500 transition">
+                            <i class="fa-solid fa-power-off text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
-    function guardarRecibo() {
-        const d = { 
-            a: document.getElementById('rApp').value, m: document.getElementById('rMonto').value,
-            e: document.getElementById('rEstado').value.toUpperCase(), c: document.getElementById('rCliente').value.toUpperCase(),
-            i: document.getElementById('rInfo').value.toUpperCase(), t: document.getElementById('rTel').value
+        <main class="flex-grow p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8 fade-in">
+            
+            <div class="text-white mb-8">
+                <h1 class="text-3xl md:text-4xl font-extrabold mb-2">Hola, Administrador</h1>
+                <p class="text-blue-200 text-sm md:text-base">Gestiona tus cobros y monitorea la actividad en tiempo real.</p>
+            </div>
+
+            <div class="flex p-1 space-x-1 bg-white/10 backdrop-blur-md rounded-xl max-w-md">
+                <button onclick="switchView('tickets')" id="tabTickets" class="w-full py-2.5 text-sm font-medium leading-5 text-blue-700 bg-white rounded-lg shadow ring-1 ring-black ring-opacity-5 transition-all">
+                    Generar Cobro
+                </button>
+                <button onclick="switchView('recibos')" id="tabRecibos" class="w-full py-2.5 text-sm font-medium leading-5 text-white hover:bg-white/10 rounded-lg transition-all">
+                    Base de Datos
+                </button>
+            </div>
+
+            <div id="viewTickets" class="fade-in">
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+                    <div class="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-800">Nuevo Ticket de Cobro</h2>
+                                <p class="text-sm text-slate-500">El enlace generado caducará en 10 minutos.</p>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1 ml-1">Empresa</label>
+                                    <select id="selEmpresa" class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 text-slate-700 font-semibold transition">
+                                        <option value="">Selecciona...</option>
+                                        <option value="Tala Préstamos" data-cta="5255-2003-4174-22">Tala Préstamos</option>
+                                        <option value="Kueski Pay" data-cta="0123-4567-8901-99">Kueski Pay</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1 ml-1">Monto (MXN)</label>
+                                        <div class="relative">
+                                            <span class="absolute left-4 top-4 text-slate-400">$</span>
+                                            <input type="number" id="tMonto" placeholder="0.00" class="w-full pl-8 p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 font-bold text-slate-700">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1 ml-1">Cuenta</label>
+                                        <input type="text" id="tCta" placeholder="1234..." class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 font-mono text-xs">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1 ml-1">Cliente</label>
+                                    <input type="text" id="tCliente" placeholder="Nombre Completo" class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500">
+                                </div>
+
+                                <button id="btnGenLink" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/30 transition transform active:scale-95 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-link"></i> GENERAR Y COPIAR
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="hidden lg:block bg-slate-50 rounded-2xl p-8 h-full relative overflow-hidden border border-slate-100">
+                            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-100 rounded-full opacity-50"></div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-4">Vista Previa del Enlace</h3>
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600"><i class="fa-solid fa-check"></i></div>
+                                    <div class="text-xs text-slate-500 font-mono">https://cobranzas...</div>
+                                </div>
+                                <p class="text-xs text-slate-400">Este enlace contiene un token de seguridad que se autodestruye en 10 minutos para proteger la información bancaria.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="viewRecibos" class="hidden fade-in">
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <h2 class="text-xl font-bold text-slate-800">Registros Globales</h2>
+                        <button onclick="toggleForm()" class="bg-slate-800 text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-black transition flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> 
+                        </button>
+                    </div>
+
+                    <div id="formRecibo" class="hidden bg-slate-50 p-6 border-b border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" id="rApp" placeholder="App" class="p-3 rounded-xl border-none shadow-sm">
+                        <input type="number" id="rMonto" placeholder="Monto" class="p-3 rounded-xl border-none shadow-sm">
+                        <input type="text" id="rEstado" placeholder="Estado" class="p-3 rounded-xl border-none shadow-sm">
+                        <input type="text" id="rCliente" placeholder="Cliente" class="p-3 rounded-xl border-none shadow-sm">
+                        <input type="text" id="rInfo" value="CARGADA" class="p-3 rounded-xl border-none shadow-sm text-slate-500">
+                        <input type="text" id="rTel" placeholder="Teléfono" class="p-3 rounded-xl border-none shadow-sm">
+                        <button id="btnGuardarFirebase" class="md:col-span-3 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition">GUARDAR CAMBIOS</button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 text-slate-500 uppercase text-xs tracking-wider font-bold">
+                                <tr>
+                                    <th class="p-5">App</th>
+                                    <th class="p-5">Monto</th>
+                                    <th class="p-5">Estado</th>
+                                    <th class="p-5">Cliente</th>
+                                    <th class="p-5">Info</th>
+                                    <th class="p-5">Teléfono</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyRecibos" class="text-sm divide-y divide-slate-100 text-slate-600 font-medium">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // --- PEGA AQUI TU CONFIGURACION DE FIREBASE ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyCopg7ajlbbrxMMy2CkrBkeQF2cp94sCoc",
+          authDomain: "siscomx-ae984.firebaseapp.com",
+          projectId: "siscomx-ae984",
+          storageBucket: "siscomx-ae984.firebasestorage.app",
+          messagingSenderId: "900131057675",
+          appId: "1:900131057675:web:3bf07461fe924f2476d70e",
+          measurementId: "G-CVFVVKR8YQ"
         };
-        if(edId > -1) { db_r[edId] = d; edId = -1; } else db_r.push(d);
-        localStorage.setItem('db_r', JSON.stringify(db_r));
-        renderRecibos();
-        document.querySelectorAll('#formRecibo input').forEach(x => { if(x.id !== 'rInfo') x.value = ''; });
-    }
 
-    function renderRecibos() {
-        const b = document.getElementById('bodyRecibos'); b.innerHTML = '';
-        db_r.forEach((r, i) => {
-            const row = b.insertRow();
-            row.innerHTML = `<td class="p-4">${r.a}</td><td class="p-4 font-bold">${r.m} MXN</td><td class="p-4 text-blue-600">${r.e}</td><td class="p-4">${r.c}</td><td class="p-4 text-slate-400">${r.i}</td><td class="p-4">PENDIENTE</td><td class="p-4">${r.t} <span class="dot-action" onclick="edR(${i})" oncontextmenu="delR(event, ${i})"></span></td>`;
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // LOGIC UI
+        const tabs = {
+            tickets: document.getElementById('tabTickets'),
+            recibos: document.getElementById('tabRecibos')
+        };
+        const views = {
+            tickets: document.getElementById('viewTickets'),
+            recibos: document.getElementById('viewRecibos')
+        };
+
+        window.login = () => {
+            const u = document.getElementById('user').value, p = document.getElementById('pass').value;
+            if(u === "admin" && p === "1234") {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+            } else alert("Acceso denegado");
+        };
+        document.getElementById('btnLogin').onclick = window.login;
+
+        window.switchView = (viewName) => {
+            // Reset styles
+            Object.values(views).forEach(el => el.classList.add('hidden'));
+            Object.values(tabs).forEach(el => {
+                el.classList.remove('bg-white', 'text-blue-700', 'shadow');
+                el.classList.add('text-white', 'hover:bg-white/10');
+            });
+
+            // Activate current
+            views[viewName].classList.remove('hidden');
+            tabs[viewName].classList.remove('text-white', 'hover:bg-white/10');
+            tabs[viewName].classList.add('bg-white', 'text-blue-700', 'shadow');
+        };
+
+        // GENERAR LINK CON CADUCIDAD (10 MIN)
+        document.getElementById('btnGenLink').onclick = () => {
+            const e = document.getElementById('selEmpresa').value, c = document.getElementById('tCliente').value, 
+                  m = document.getElementById('tMonto').value, cta = document.getElementById('tCta').value;
+            
+            if(!e || !c || !m) return alert("Faltan datos");
+
+            // Creamos timestamp actual
+            const now = Date.now();
+            
+            const path = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+            // Agregamos el parámetro &t=TIEMPO
+            const url = `${path}pago.html?e=${btoa(e)}&c=${btoa(c)}&m=${m}&cta=${btoa(cta)}&t=${now}`;
+            
+            navigator.clipboard.writeText(url).then(() => { alert("¡Link Generado y Copiado! Caduca en 10 min."); });
+        };
+
+        document.getElementById('selEmpresa').onchange = (e) => {
+            document.getElementById('tCta').value = e.target.options[e.target.selectedIndex].dataset.cta || "";
+        };
+
+        // FIREBASE LOGIC
+        document.getElementById('btnGuardarFirebase').onclick = async () => {
+            const d = {
+                a: document.getElementById('rApp').value, m: document.getElementById('rMonto').value,
+                e: document.getElementById('rEstado').value.toUpperCase(), c: document.getElementById('rCliente').value.toUpperCase(),
+                i: document.getElementById('rInfo').value.toUpperCase(), t: document.getElementById('rTel').value,
+                f: new Date()
+            };
+            if(!d.a) return;
+            try {
+                await addDoc(collection(db, "recibos"), d);
+                alert("Guardado");
+                document.querySelectorAll('#formRecibo input').forEach(x => { if(x.id !== 'rInfo') x.value = ''; });
+            } catch(e) { console.error(e); }
+        };
+
+        onSnapshot(query(collection(db, "recibos"), orderBy("f", "desc")), (snap) => {
+            const b = document.getElementById('bodyRecibos'); b.innerHTML = '';
+            snap.forEach((docSnap) => {
+                const r = docSnap.data();
+                const row = b.insertRow();
+                row.className = "hover:bg-slate-50 transition";
+                row.innerHTML = `
+                    <td class="p-5 font-bold text-slate-800">${r.a}</td>
+                    <td class="p-5 font-bold text-blue-600">$${r.m}</td>
+                    <td class="p-5"><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs font-bold">${r.e}</span></td>
+                    <td class="p-5 uppercase text-xs">${r.c}</td>
+                    <td class="p-5 text-slate-400 text-xs">${r.i}</td>
+                    <td class="p-5 font-mono text-xs flex items-center justify-between">
+                        ${r.t} <button onclick="borrar('${docSnap.id}')" class="text-red-300 hover:text-red-500">×</button>
+                    </td>`;
+            });
         });
-    }
 
-    function edR(i) {
-        edId = i; const r = db_r[i];
-        document.getElementById('rApp').value = r.a; document.getElementById('rMonto').value = r.m;
-        document.getElementById('rEstado').value = r.e; document.getElementById('rCliente').value = r.c;
-        document.getElementById('rTel').value = r.t;
-        document.getElementById('formRecibo').classList.remove('hidden');
-    }
+        window.borrar = async (id) => { if(confirm("¿Borrar?")) await deleteDoc(doc(db, "recibos", id)); };
+        window.toggleForm = () => document.getElementById('formRecibo').classList.toggle('hidden');
 
-    function delR(e, i) { e.preventDefault(); if(confirm("¿Borrar?")) { db_r.splice(i, 1); localStorage.setItem('db_r', JSON.stringify(db_r)); renderRecibos(); } }
-
-    function addUser() {
-        const n = document.getElementById('nNombre').value, u = document.getElementById('nUser').value, p = document.getElementById('nPass').value;
-        if(n && u && p) { db_u.push({n, u, p, r: "empleado"}); localStorage.setItem('db_u', JSON.stringify(db_u)); alert("Empleado listo"); }
-    }
-
-    function copyLink() {
-        const el = document.getElementById('urlFinal'); el.select(); document.execCommand('copy'); alert("Link copiado");
-    }
-</script>
+    </script>
 </body>
 </html>

